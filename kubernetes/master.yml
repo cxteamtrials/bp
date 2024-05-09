@@ -102,7 +102,7 @@
 
     - name: Installing apt packages
       package: name={{ item }} state=present force=yes install_recommends=no
-      loop: "{{ k8s_packages }}
+      loop: "{{ k8s_packages }}"
         
 
     - name: create the cluster
