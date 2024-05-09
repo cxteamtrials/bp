@@ -6,6 +6,8 @@
     k8s_packages:
       - kubernetes-cni
       - kubelet
+      - kubeadm
+
     
   tasks:
     - include: create-worker.yml
