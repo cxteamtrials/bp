@@ -1,4 +1,4 @@
----
+
 - name: Prepare a Kubernetes cluster node
   hosts: all
   become: yes
