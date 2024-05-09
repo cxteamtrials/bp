@@ -1,7 +1,16 @@
----
+
 - name: Prepare a Kubernetes cluster node
   hosts: all
   become: yes
+  vars:
+    k8s_url_apt_key: "https://pkgs.k8s.io/core:/stable:/v1.29/deb/Release.key"
+    k8s_gpgpath: /usr/share/keyrings/kubernetes-apt-keyring.gpg
+    k8s_repository: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/"
+    k8s_packages:
+      - kubernetes-cni
+      - kubelet
+      - kubeadm
+    
   tasks:
 
     - name: Creating a module container file with content
@@ -73,14 +82,14 @@
         - curl
 
     - name: Add an Apt signing key, uses whichever key is at the URL
-      apt_key:
-        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-        state: present
+      shell: curl -fsSL {{ k8s_url_apt_key }} | gpg --dearmor -o {{ k8s_gpgpath }}
+      args:
+        creates: "{{ k8s_gpgpath }}"
 
 
     - name: Add k8s repository
       apt_repository:
-        repo: "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+        repo: "deb [signed-by={{ k8s_gpgpath }}] {{ k8s_repository }} /"
         state: present
         filename: kubernetes
         update_cache: yes
@@ -92,11 +101,8 @@
         cache_valid_time: 3600
 
     - name: Installing apt packages
-      apt: pkg={{ item }}
-      with_items:
-        - kubelet=1.25.0-00
-        - kubectl=1.25.0-00
-        - kubeadm=1.25.0-00
+      package: name={{ item }} state=present force=yes install_recommends=no
+      loop: "{{ k8s_packages }}"
         
 
     - name: create the cluster
