@@ -6,6 +6,9 @@
   become_method: sudo
   gather_facts: true
 
+- name: Set ANSIBLE_PYTHON_PATH
+  become: yes
+  shell: "export ANSIBLE_PYTHON_PATH=/usr/bin/python3.9"
 
 
   #vars_files:
