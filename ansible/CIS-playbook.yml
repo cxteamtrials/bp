@@ -8,7 +8,9 @@
 
 - name: Set ANSIBLE_PYTHON_PATH
   become: yes
-  shell: "export ANSIBLE_PYTHON_PATH=/usr/bin/python3.9"
+  environment:
+    name: ANSIBLE_PYTHON_PATH
+    value: /usr/bin/python3.9
 
 
   #vars_files:
