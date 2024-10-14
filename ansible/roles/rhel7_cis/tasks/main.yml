@@ -1,4 +1,11 @@
 ---
+
+- name: Tooling configuration for rhel7-cis hardening
+  hosts: all
+  become: true
+  become_method: sudo
+  gather_facts: true
+
 # tasks file for RHEL7-CIS
 - name: Check OS version and family
   fail:
